@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${quiz.title + ' - Quiz App'}">Quiz - Quiz App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .question-container {
+            margin-bottom: 2rem;
+        }
+        .option-label {
+            display: block;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        .option-label:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="mb-4">
+            <h1 class="display-5 fw-bold">Quiz Application</h1>
+            <nav class="mb-3">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quizzes">Quizzes</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="mb-4">
+                <h2 th:text="${quiz.title}">Quiz Title</h2>
+                <p th:text="${quiz.description}">Quiz description</p>
+                <p><span class="badge bg-primary" th:text="${quiz.questions.size() + ' Questions'}">5 Questions</span></p>
+            </div>
+            
+            <form th:action="@{'/api/quiz-results/submit'}" method="post" id="quizForm">
+                <input type="hidden" name="quizId" th:value="${quiz.id}">
+                <input type="hidden" id="questionCount" th:value="${quiz.questions.size()}">
+                
+                <div class="question-container" th:each="question, stat : ${quiz.questions}">
+                    <h4 th:text="${stat.count + '. ' + question.questionText}">1. Question text</h4>
+                    
+                    <div class="options-container">
+                        <div class="form-check" th:each="option, optStat : ${question.options}">
+                            <label class="option-label">
+                                <input class="form-check-input" type="radio" 
+                                       th:name="${'answers[' + stat.index + ']'}" 
+                                       th:value="${optStat.index}" 
+                                       required>
+                                <span th:text="${option}">Option text</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg">Submit Answers</button>
+            </form>
+        </main>
+        
+        <footer class="mt-5 pt-3 border-top">
+            <p>&copy; 2023 Quiz Application</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:inline="javascript">
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const answers = [];
+            
+            // Get all radio inputs and extract answers
+            const radioInputs = document.querySelectorAll('input[type="radio"]:checked');
+            radioInputs.forEach(function(input) {
+                const index = parseInt(input.name.match(/\d+/)[0]);
+                answers[index] = parseInt(input.value);
+            });
+            
+            // Send answers to backend
+            fetch(form.action + '?quizId=' + formData.get('quizId'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(answers),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Redirect to results page
+                window.location.href = '/quiz-results/' + result.id;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('There was a problem submitting your quiz. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>

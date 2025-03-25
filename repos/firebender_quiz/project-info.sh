@@ -1,0 +1,60 @@
+#!/bin/bash
+
+echo "Quiz Application Documentation"
+echo "============================"
+echo ""
+echo "This script summarizes the key components of the Quiz Application."
+echo ""
+
+echo "Project Structure:"
+echo "----------------"
+find src/main -type f -name "*.java" | sort
+
+echo ""
+echo "Model Classes:"
+echo "------------"
+echo "1. Question.java: Represents a quiz question with options and correct answer"
+echo "2. Quiz.java: Represents a quiz with a collection of questions"
+echo "3. QuizResult.java: Represents the result of a completed quiz"
+echo ""
+
+echo "Repository Interfaces:"
+echo "------------------"
+echo "1. QuestionRepository.java: Data access for Question entities"
+echo "2. QuizRepository.java: Data access for Quiz entities"
+echo "3. QuizResultRepository.java: Data access for QuizResult entities"
+echo ""
+
+echo "Service Classes:"
+echo "-------------"
+echo "1. QuestionService.java: Business logic for managing questions"
+echo "2. QuizService.java: Business logic for managing quizzes"
+echo "3. QuizResultService.java: Business logic for quiz submission and results"
+echo ""
+
+echo "Controllers:"
+echo "----------"
+echo "1. QuestionController.java: REST API for questions"
+echo "2. QuizController.java: REST API for quizzes"
+echo "3. QuizResultController.java: REST API for quiz results" 
+echo "4. WebController.java: Web controllers for Thymeleaf templates"
+echo ""
+
+echo "Templates:"
+echo "--------"
+echo "1. index.html: Home page template"
+echo "2. quizzes.html: Quiz listing template"
+echo "3. quiz.html: Quiz taking template" 
+echo "4. quiz-result.html: Quiz result template"
+echo ""
+
+echo "Configuration:"
+echo "------------"
+echo "1. DataLoader.java: Initializes sample quiz data"
+echo ""
+
+echo "To run the application:"
+echo "-------------------"
+echo "./gradlew bootRun"
+echo ""
+echo "Access the application at http://localhost:8080"
