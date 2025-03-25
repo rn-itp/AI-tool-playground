@@ -1,0 +1,16 @@
+/src/main/resources/*.p12
+/src/main/resources/*.pfx
+/src/main/resources/application-local.yml
+/build
+/.idea/
+/.settings/
+/.classpath
+/.project
+/.gradle/
+/build/
+/out/
+/buildInfo.txt
+/bin/
+/src/main/resources/local/
+/reports
+.env
